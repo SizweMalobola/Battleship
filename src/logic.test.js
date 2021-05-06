@@ -117,3 +117,35 @@ test("should return text if multiple ships share the same coordinates", () => {
     board.placeShip(battleship, { position: "1B", dimension: "vertical" })
   ).toBe("you have shared coordinates");
 });
+
+// recieveAttack
+
+test("gameboard should keep track of missed attacks", () => {
+  let carrier = new Ship(5);
+  let battleship = new Ship(4);
+  let submarine = new Ship(3);
+  // let destroyer = new Ship(2);
+  // let destroyerTwo = new Ship(2);
+  let board = new GameBoard();
+  board.placeShip(battleship, { position: "1A", dimension: "horizontal" });
+  board.placeShip(carrier, { position: "5E", dimension: "horizontal" });
+  board.placeShip(submarine, { position: "1F", dimension: "horizontal" });
+  board.receiveAttack("1A");
+  board.receiveAttack("1B");
+  board.receiveAttack("2C");
+  expect(board.misses).toEqual([12]);
+});
+
+test("gameboard should keep track of attacks that hit", () => {
+  let carrier = new Ship(5);
+  let battleship = new Ship(4);
+  let submarine = new Ship(3);
+  let board = new GameBoard();
+  board.placeShip(battleship, { position: "1A", dimension: "horizontal" });
+  board.placeShip(carrier, { position: "5E", dimension: "horizontal" });
+  board.placeShip(submarine, { position: "1F", dimension: "horizontal" });
+  board.receiveAttack("5A");
+  board.receiveAttack("1F");
+  board.receiveAttack("6H");
+  expect(board.hits).toEqual([5]);
+});

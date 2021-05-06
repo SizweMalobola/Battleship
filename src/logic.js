@@ -145,6 +145,8 @@ class GameBoard {
       "10J",
     ];
     this.fleet = [];
+    this.hits = [];
+    this.misses = [];
   }
   placeShip(ship, coordinates) {
     // I add ship to battleshipesArray after it is successfully placed, else throw error.
@@ -182,7 +184,6 @@ class GameBoard {
       }
     }
     // set the coordinates on the ship object and push ship object to fleet
-    console.log(coordinatesArray);
     // before I add the coordinates to my ship object I first have to check in the fleet if any of the coordinates I'm trying to add to ship have already been used
     if (this.isShared(coordinatesArray)) {
       return "you have shared coordinates";
@@ -201,6 +202,23 @@ class GameBoard {
       }
     });
     return shared;
+  }
+  receiveAttack(coordinates) {
+    // i represents the a position on the board.
+    let i = this.board.indexOf(coordinates);
+    let hit = false;
+    this.fleet.forEach((obj) => {
+      if (obj.coordinates.includes(i)) {
+        this.hits.push(i);
+        hit = true;
+        // get position to hit
+        let target = obj.coordinates.indexOf(i);
+        obj.hit(target);
+      }
+    });
+    if (!hit) {
+      this.misses.push(i);
+    }
   }
 }
 // coordinates is an object. the object will have two variables position(A1) and dimension(can only be horizontal or vertical).
