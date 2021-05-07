@@ -220,6 +220,13 @@ class GameBoard {
       this.misses.push(i);
     }
   }
+  // game should be able to report whether or not all of their ships have been sunk.
+  isFleetSunk() {
+    // if all the ships are sunk, isFleetSunk method will return true else false.
+    return this.fleet.every((ship) => {
+      return ship.isSunk() === true;
+    });
+  }
 }
 // coordinates is an object. the object will have two variables position(A1) and dimension(can only be horizontal or vertical).
 // when before coordinates can be saved to ship object, I have to make sure that they are valid.

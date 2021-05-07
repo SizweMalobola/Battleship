@@ -149,3 +149,16 @@ test("gameboard should keep track of attacks that hit", () => {
   board.receiveAttack("6H");
   expect(board.hits).toEqual([5]);
 });
+
+//  isFleetSunk
+
+test("should return true if all ships in fleet are sunk", () => {
+  let submarine = new Ship(3);
+  let board = new GameBoard();
+  board.placeShip(submarine, { position: "1A", dimension: "horizontal" });
+  // board.placeShip(submarine, { position: "2A", dimension: "horizontal" });
+  board.receiveAttack("1A");
+  board.receiveAttack("1B");
+  board.receiveAttack("1C");
+  expect(board.isFleetSunk()).toBe(true);
+});
