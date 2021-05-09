@@ -1,0 +1,18 @@
+.title {
+  text-align: center;
+  font-size: 3rem;
+}
+
+.panel {
+  width: 75%;
+  margin: 0 auto;
+  text-align: center;
+  border: white 2px dotted;
+  padding: 1rem;
+  font-size: 1.5rem;
+}
+
+.prompt {
+  color: #146f70;
+  margin-bottom: 1rem;
+}

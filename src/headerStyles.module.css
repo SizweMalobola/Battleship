@@ -1,0 +1,14 @@
+.title {
+  font-size: 6rem;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.disc_div {
+  text-align: center;
+  border: 1px solid white;
+  padding: 1rem;
+  font-size: 1.5rem;
+  margin: 0 auto;
+  width: 50%;
+}
