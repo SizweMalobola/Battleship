@@ -162,3 +162,5 @@ test("should return true if all ships in fleet are sunk", () => {
   board.receiveAttack("1C");
   expect(board.isFleetSunk()).toBe(true);
 });
+
+// Player

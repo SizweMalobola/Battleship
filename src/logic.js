@@ -150,10 +150,7 @@ class GameBoard {
   }
   placeShip(ship, coordinates) {
     // I add ship to battleshipesArray after it is successfully placed, else throw error.
-    // check whether position is has already been taken
-    // this.fleet.forEach(obj => {
-    // })
-    //
+    // check whether position has already been taken
     let start = this.board.indexOf(coordinates.position);
     let coordinatesArray = [];
     let current = start;
@@ -207,15 +204,14 @@ class GameBoard {
     // i represents the a position on the board.
     let i = this.board.indexOf(coordinates);
     let hit = false;
-    this.fleet.forEach((obj) => {
+    for (const obj of this.fleet) {
       if (obj.coordinates.includes(i)) {
-        this.hits.push(i);
-        hit = true;
-        // get position to hit
         let target = obj.coordinates.indexOf(i);
         obj.hit(target);
+        this.hits.push(i);
+        hit = true;
       }
-    });
+    }
     if (!hit) {
       this.misses.push(i);
     }
@@ -232,4 +228,20 @@ class GameBoard {
 // when before coordinates can be saved to ship object, I have to make sure that they are valid.
 // coordinates would follow a simple set of rules
 // 1. ship coordinates must not warp to row below. 2. two ships can not share the same block on the grid.
-export { GameBoard };
+
+// create Player
+// It only makes sense if Player is its own Class
+class Player {
+  constructor(player, board) {
+    this.playerName = player;
+    this.playerBoard = board;
+  }
+  // player is ready function, checks whether player's fleet is 5;
+}
+// whats next for me is to implement game loop
+// player one will set up ships on his board
+// computer will set up ships on its board
+// player one will click on random block on grid which will represent
+// whether its a hit or a miss , the next turn goes to the computer
+// once a ship been sunk, it will be displayed
+export { GameBoard, Player };
