@@ -17,3 +17,30 @@
   color: #4ed9db;
   margin-bottom: 1rem;
 }
+
+@media only screen and (max-width: 600px) {
+  .title {
+    font-size: 4rem;
+  }
+  .panel {
+    width: 83.5%;
+    font-size: 2rem;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .title {
+    font-size: 3.9rem;
+  }
+  .panel {
+    width: 83.5%;
+    font-size: 2rem;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+  .panel {
+    width: 85%;
+  }
+}

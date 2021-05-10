@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PlayerStatus from "./PlayerStatus";
+import { VscDebugRestart } from "react-icons/vsc";
 import styles from "../gameControllerStyles.module.css";
 import PlayerBoard from "./PlayerBoard";
 import { GameBoard, Player, shipsArray } from "../logic";
@@ -61,7 +62,7 @@ export default class GameController extends Component {
         `You've already picked these coordinates homes. Try different ones.`
       );
     }
-    let coordinates = target.id;
+    let coordinates = target.parentElement.id;
     this.setState({
       player: player.playerBoard.receiveAttack(coordinates),
     });
@@ -103,37 +104,50 @@ export default class GameController extends Component {
   }
   componentDidUpdate() {
     console.log("did update");
+    if (this.state.gameOver) {
+      //  I want blocks not to respond, maybe I should add another class claaed
+      const buttonsArray = document.querySelectorAll(".board button");
+      for (const btn of buttonsArray) {
+        btn.setAttribute("disabled", true);
+      }
+    }
   }
   componentDidMount() {}
 
   render() {
     return (
-      <div className={styles["game-container"]}>
+      <>
         {this.state.gameOver && (
-          <div>
+          <div className={styles.winnerPanel}>
             <h1>Winner is {this.state.turn}</h1>
+            <button className={styles.restart}>
+              <VscDebugRestart />
+              Restart
+            </button>
           </div>
         )}
-        <div className={styles.player}>
-          <PlayerStatus title="Human" isGameOver={this.state.gameOver} />
-          <PlayerBoard
-            player={this.state.human}
-            randoPlacement={this.randomPlacement}
-            clickHandler={this.clickHandler}
-          />
+        <div className={styles["game-container"]}>
+          <div className={styles.player}>
+            <PlayerStatus title="Human" isGameOver={this.state.gameOver} />
+            <PlayerBoard
+              player={this.state.human}
+              randoPlacement={this.randomPlacement}
+              clickHandler={this.clickHandler}
+            />
+          </div>
+          <div className={styles.player}>
+            <PlayerStatus
+              title="Super-Computer"
+              isGameOver={this.state.gameOver}
+            />
+            <PlayerBoard
+              player={this.state.computer}
+              randoPlacement={this.randomPlacement}
+              clickHandler={this.clickHandler}
+            />
+          </div>
         </div>
-        <div className={styles.player}>
-          <PlayerStatus
-            title="Super-Computer"
-            isGameOver={this.state.gameOver}
-          />
-          <PlayerBoard
-            player={this.state.computer}
-            randoPlacement={this.randomPlacement}
-            clickHandler={this.clickHandler}
-          />
-        </div>
-      </div>
+      </>
     );
   }
 }

@@ -8,4 +8,10 @@
 }
 
 #app-container {
+  width: 100vh;
+}
+@media only screen and (min-width: 768px) {
+  #app-container {
+    width: 100%;
+  }
 }

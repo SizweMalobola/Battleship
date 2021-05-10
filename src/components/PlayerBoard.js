@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { GiWaterSplash } from "react-icons/gi";
 import styles from "../playerBoard.module.css";
+const classNames = require("classnames");
 
 export default class PlayerBoard extends Component {
   constructor(props) {
@@ -15,8 +16,8 @@ export default class PlayerBoard extends Component {
   renderMisses() {
     this.props.player.playerBoard.misses.forEach((i) => {
       let block = this.boardRef.current;
-      block = block.children[i];
-      block.style.backgroundColor = "yellow";
+      block = block.children[i].firstElementChild;
+      block.classList.add(styles.miss);
       // TODO  I want to add an icon on the inside of missed blocks
       //   block.appendChild(<GiWaterSplash />);
     });
@@ -25,16 +26,16 @@ export default class PlayerBoard extends Component {
   renderHits() {
     this.props.player.playerBoard.hits.forEach((i) => {
       let block = this.boardRef.current;
-      block = block.children[i];
-      block.style.backgroundColor = "green";
+      block = block.children[i].firstElementChild;
+      block.classList.add(styles.hit);
     });
   }
   renderSunkShips() {
     this.props.player.playerBoard.sunkShips.forEach((arr) => {
       for (const i of arr) {
         let block = this.boardRef.current;
-        block = block.children[i];
-        block.style.backgroundColor = "red";
+        block = block.children[i].firstElementChild;
+        block.classList.add(styles.sunk);
       }
     });
   }
@@ -47,8 +48,8 @@ export default class PlayerBoard extends Component {
     if (this.props.player.playerName === "Human") {
       for (const ship of this.props.player.playerBoard.fleet) {
         ship.coordinates.forEach((i) => {
-          let block = document.querySelector("#Human-board");
-          block = block.children[i];
+          let block = this.boardRef.current;
+          block = block.children[i].firstElementChild;
           block.style.backgroundColor = "#1801C0";
         });
       }
@@ -67,21 +68,19 @@ export default class PlayerBoard extends Component {
       <div
         ref={this.boardRef}
         id={player.playerName + "-board"}
-        className={styles["game-board"]}
+        className={classNames(styles["game-board"], "board")}
       >
         {player.playerBoard.board.map((el, index) => {
           return (
-            <div
-              id={el}
-              className={styles.block}
-              key={el + index}
-              onClick={(e) => {
-                if (player.playerName === "Computer") {
-                  clickHandler(e.target, index, player);
-                }
-              }}
-            >
-              {/* <button></button> */}
+            <div id={el} className={styles.block} key={el + index}>
+              <button
+                className={styles.btn}
+                onClick={(e) => {
+                  if (player.playerName === "Computer") {
+                    clickHandler(e.target, index, player);
+                  }
+                }}
+              ></button>
             </div>
           );
         })}
