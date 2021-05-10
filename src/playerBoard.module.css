@@ -3,4 +3,12 @@
   border: 1px solid white;
   width: 500px;
   height: 500px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-auto-rows: repeat(10, 1fr);
+  gap: 1px;
+  padding: 1px;
+}
+.block {
+  border: 1px solid white;
 }

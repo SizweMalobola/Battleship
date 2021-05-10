@@ -10,9 +10,10 @@
   border: white 2px dotted;
   padding: 1rem;
   font-size: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .prompt {
-  color: #146f70;
+  color: #4ed9db;
   margin-bottom: 1rem;
 }
