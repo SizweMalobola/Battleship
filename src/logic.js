@@ -153,6 +153,7 @@ class GameBoard {
     this.fleet = [];
     this.hits = [];
     this.misses = [];
+    this.sunkShips = [];
   }
   placeShip(ship, coordinates) {
     // I add ship to battleshipesArray after it is successfully placed, else throw error.
@@ -216,6 +217,9 @@ class GameBoard {
         obj.hit(target);
         this.hits.push(i);
         hit = true;
+        if (obj.isSunk()) {
+          this.sunkShips.push(obj.coordinates);
+        }
       }
     }
     if (!hit) {

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { GiWaterSplash } from "react-icons/gi";
 import styles from "../playerBoard.module.css";
 
 export default class PlayerBoard extends Component {
@@ -9,12 +10,15 @@ export default class PlayerBoard extends Component {
     this.boardRef = React.createRef();
     this.renderMisses = this.renderMisses.bind(this);
     this.renderHits = this.renderHits.bind(this);
+    this.renderSunkShips = this.renderSunkShips.bind(this);
   }
   renderMisses() {
     this.props.player.playerBoard.misses.forEach((i) => {
       let block = this.boardRef.current;
       block = block.children[i];
       block.style.backgroundColor = "yellow";
+      // TODO  I want to add an icon on the inside of missed blocks
+      //   block.appendChild(<GiWaterSplash />);
     });
     console.log(this.props.player.playerBoard.misses);
   }
@@ -25,6 +29,16 @@ export default class PlayerBoard extends Component {
       block.style.backgroundColor = "green";
     });
   }
+  renderSunkShips() {
+    this.props.player.playerBoard.sunkShips.forEach((arr) => {
+      for (const i of arr) {
+        let block = this.boardRef.current;
+        block = block.children[i];
+        block.style.backgroundColor = "red";
+      }
+    });
+  }
+
   componentDidMount() {
     this.props.randoPlacement(this.props.player);
   }
@@ -43,6 +57,8 @@ export default class PlayerBoard extends Component {
     this.renderMisses();
     // renders hits
     this.renderHits();
+    // render sunk ships
+    this.renderSunkShips();
   }
 
   render() {
@@ -61,10 +77,12 @@ export default class PlayerBoard extends Component {
               key={el + index}
               onClick={(e) => {
                 if (player.playerName === "Computer") {
-                  clickHandler(e.target, player);
+                  clickHandler(e.target, index, player);
                 }
               }}
-            ></div>
+            >
+              {/* <button></button> */}
+            </div>
           );
         })}
       </div>

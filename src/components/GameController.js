@@ -11,9 +11,22 @@ export default class GameController extends Component {
     this.state = {
       human: new Player("Human", new GameBoard()),
       computer: new Player("Computer", new GameBoard()),
+      gameOver: false,
+      turn: "Human",
+      //   Im thinking of setting a state to keep track on the game's progress.
     };
     this.randomPlacement = this.randomPlacement.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
+    this.compsTurn = this.compsTurn.bind(this);
+    this.isGameOver = this.isGameOver.bind(this);
+    this.changeTurn = this.changeTurn.bind(this);
+  }
+  //!   I don't trust this function but is seems to work for now
+  changeTurn() {
+    this.setState({
+      turn: this.state.turn === "Human" ? "Computer" : "Human",
+    });
+    console.log(this.state.turn);
   }
   randomPlacement(player) {
     const board = player.playerBoard.board;
@@ -38,29 +51,71 @@ export default class GameController extends Component {
     }
   }
   //   anything that has to do with updating state will be done here
-  clickHandler(e, player) {
+  clickHandler(target, index, player) {
     // onclikck board being clicked receives attack
-    let coordinates = e.id;
-    console.log(coordinates);
+    if (
+      player.playerBoard.misses.includes(index) ||
+      player.playerBoard.hits.includes(index)
+    ) {
+      return console.log(
+        `You've already picked these coordinates homes. Try different ones.`
+      );
+    }
+    let coordinates = target.id;
     this.setState({
       player: player.playerBoard.receiveAttack(coordinates),
     });
-    console.log(player.playerBoard.misses);
+    // after a hit check wether all the ships are sunk on computer
+    if (this.isGameOver(player)) {
+      this.setState({ gameOver: true });
+      console.log("game over Human guy wins");
+    } else {
+      this.changeTurn();
+      //    run function that will let computer take a turn
+      this.compsTurn(this.state.human);
+    }
   }
-
+  compsTurn(player) {
+    if (this.state.turn === "Computer") {
+      console.log("is computer's turn");
+    }
+    let target = Math.round(Math.random() * 99);
+    while (
+      player.playerBoard.misses.includes(target) ||
+      player.playerBoard.hits.includes(target)
+    ) {
+      target = Math.round(Math.random() * 99);
+    }
+    let coordinates = player.playerBoard.board[target];
+    this.setState({
+      player: player.playerBoard.receiveAttack(coordinates),
+    });
+    //
+    if (this.isGameOver(player)) {
+      this.setState({ gameOver: true });
+      console.log("game over Super computer wins guy wins");
+    } else {
+      this.changeTurn();
+    }
+  }
+  isGameOver(player) {
+    return player.playerBoard.isFleetSunk();
+  }
   componentDidUpdate() {
     console.log("did update");
   }
-  componentDidMount() {
-    console.log(this.state);
-  }
+  componentDidMount() {}
 
   render() {
-    // console.log(this.state);
     return (
       <div className={styles["game-container"]}>
+        {this.state.gameOver && (
+          <div>
+            <h1>Winner is {this.state.turn}</h1>
+          </div>
+        )}
         <div className={styles.player}>
-          <PlayerStatus title="Human" />
+          <PlayerStatus title="Human" isGameOver={this.state.gameOver} />
           <PlayerBoard
             player={this.state.human}
             randoPlacement={this.randomPlacement}
@@ -68,7 +123,10 @@ export default class GameController extends Component {
           />
         </div>
         <div className={styles.player}>
-          <PlayerStatus title="Super-Computer" />
+          <PlayerStatus
+            title="Super-Computer"
+            isGameOver={this.state.gameOver}
+          />
           <PlayerBoard
             player={this.state.computer}
             randoPlacement={this.randomPlacement}

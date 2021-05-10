@@ -9,18 +9,20 @@ export default class PlayerStatus extends Component {
   }
 
   render() {
-    const { title } = this.props;
+    const { title, isGameOver } = this.props;
     return (
       <div>
         <h1 className={style.title}>{title}</h1>
-        <div className={style.panel}>
-          <p className={style.prompt}>Place your pieces</p>
-          <div>
-            {" "}
-            <button>Dimension : ____ </button>{" "}
-            <span>5 Ships left to place</span>{" "}
+        {!isGameOver && (
+          <div className={style.panel}>
+            <p className={style.prompt}>Place your pieces</p>
+            <div>
+              {" "}
+              <button>Dimension : ____ </button>{" "}
+              <span>5 Ships left to place</span>{" "}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
