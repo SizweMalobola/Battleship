@@ -13,6 +13,9 @@
   width: 50%;
 }
 @media only screen and (max-width: 600px) {
+  .title{
+    /* font-size: 3rem; */
+  }
   .disc_div {
     width: 80%;
     font-size: 2.5rem;

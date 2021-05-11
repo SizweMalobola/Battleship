@@ -75,6 +75,6 @@
     flex-direction: row;
   }
   .player {
-    width: 50%;
+    /* width: 50%; */
   }
 }
