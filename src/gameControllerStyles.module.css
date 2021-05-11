@@ -74,7 +74,4 @@
   .game-container {
     flex-direction: row;
   }
-  .player {
-    /* width: 50%; */
-  }
 }

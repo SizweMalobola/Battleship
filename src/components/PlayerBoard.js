@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GiWaterSplash } from "react-icons/gi";
+import { GiExplosionRays, GiShipWreck, GiWaterSplash } from "react-icons/gi";
 import styles from "../playerBoard.module.css";
 const classNames = require("classnames");
 
@@ -18,8 +18,6 @@ export default class PlayerBoard extends Component {
       let block = this.boardRef.current;
       block = block.children[i].firstElementChild;
       block.classList.add(styles.miss);
-      // TODO  I want to add an icon on the inside of missed blocks
-      //   block.appendChild(<GiWaterSplash />);
     });
     console.log(this.props.player.playerBoard.misses);
   }
@@ -50,7 +48,7 @@ export default class PlayerBoard extends Component {
         ship.coordinates.forEach((i) => {
           let block = this.boardRef.current;
           block = block.children[i].firstElementChild;
-          block.style.backgroundColor = "#1801C0";
+          block.classList.add(styles.ship);
         });
       }
     }
@@ -80,7 +78,13 @@ export default class PlayerBoard extends Component {
                     clickHandler(e.target, index, player);
                   }
                 }}
-              ></button>
+              >
+                {player.playerBoard.misses.includes(index) && 
+                 (<GiWaterSplash />) || player.playerBoard.sunkShips.find( ar => { return ar.includes(index) }) &&
+                    (<GiShipWreck/>) || player.playerBoard.hits.includes(index) &&
+                    (<GiExplosionRays/>)
+                }
+              </button>
             </div>
           );
         })}

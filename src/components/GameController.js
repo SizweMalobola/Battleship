@@ -21,6 +21,8 @@ export default class GameController extends Component {
     this.compsTurn = this.compsTurn.bind(this);
     this.isGameOver = this.isGameOver.bind(this);
     this.changeTurn = this.changeTurn.bind(this);
+    this.disableButtons = this.disableButtons.bind(this);
+    this.enableButtons = this.enableButtons.bind(this);
   }
   //!   I don't trust this function but is seems to work for now
   changeTurn() {
@@ -71,10 +73,28 @@ export default class GameController extends Component {
       this.setState({ gameOver: true });
       console.log("game over Human guy wins");
     } else {
+      // disable computers buttons to prevent click while waiting for computer to make a move
+     let boardContainer = target.parentElement.parentElement;
+     let btnArray = boardContainer.querySelectorAll("button");
+      this.disableButtons(btnArray);
+      // run function that will let computer take a turn
       this.changeTurn();
-      //    run function that will let computer take a turn
-      this.compsTurn(this.state.human);
+      setTimeout(()=>{
+        this.compsTurn(this.state.human)
+        this.enableButtons(btnArray);
+      }, 1000); 
     }
+  }
+  // function for disabling buttons
+  disableButtons(btnList){
+    for (const btn of btnList) {
+       btn.setAttribute("disabled",true);
+     }
+  }
+  enableButtons(btnList){
+     for (const btn of btnList) {
+       btn.removeAttribute("disabled");
+     }
   }
   compsTurn(player) {
     if (this.state.turn === "Computer") {
@@ -107,9 +127,7 @@ export default class GameController extends Component {
     if (this.state.gameOver) {
       //  I want blocks not to respond, maybe I should add another class claaed
       const buttonsArray = document.querySelectorAll(".board button");
-      for (const btn of buttonsArray) {
-        btn.setAttribute("disabled", true);
-      }
+      this.disableButtons(buttonsArray);
     }
   }
   componentDidMount() {}
