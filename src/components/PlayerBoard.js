@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { GiExplosionRays, GiShipWreck, GiWaterSplash } from "react-icons/gi";
 import styles from "../playerBoard.module.css";
+import {shipsArray } from "../logic";
 const classNames = require("classnames");
+
 
 export default class PlayerBoard extends Component {
   constructor(props) {
@@ -78,6 +80,14 @@ export default class PlayerBoard extends Component {
                     clickHandler(e.target, index, player);
                   }
                 }}
+                // 
+                onMouseOver={
+                  (e) => {
+                    if(player.playerName === "Human"){
+                      
+                    }
+                  }
+                }
               >
                 {player.playerBoard.misses.includes(index) && 
                  (<GiWaterSplash />) || player.playerBoard.sunkShips.find( ar => { return ar.includes(index) }) &&

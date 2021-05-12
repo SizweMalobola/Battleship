@@ -9,7 +9,7 @@ export default class PlayerStatus extends Component {
   }
 
   render() {
-    const { title, isGameOver } = this.props;
+    const { title, isGameOver,player,dimension,changeDimension } = this.props;
     return (
       <div>
         <h1 className={style.title}>{title}</h1>
@@ -18,8 +18,8 @@ export default class PlayerStatus extends Component {
             <p className={style.prompt}>Place your pieces</p>
             <div>
               {" "}
-              <button>Dimension : ____ </button>{" "}
-              <span>5 Ships left to place</span>{" "}
+              <button onClick={()=>{changeDimension()}}>Dimension : {dimension} </button>{" "}
+              <span>Ships Remaining: { 5 - player.playerBoard.sunkShips.length}</span>{" "}
             </div>
           </div>
         )}

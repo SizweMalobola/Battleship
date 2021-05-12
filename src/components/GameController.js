@@ -14,6 +14,8 @@ export default class GameController extends Component {
       computer: new Player("Computer", new GameBoard()),
       gameOver: false,
       turn: "Human",
+      // dimenstion state
+      dimension: "horizontal",
       //   Im thinking of setting a state to keep track on the game's progress.
     };
     this.randomPlacement = this.randomPlacement.bind(this);
@@ -23,6 +25,7 @@ export default class GameController extends Component {
     this.changeTurn = this.changeTurn.bind(this);
     this.disableButtons = this.disableButtons.bind(this);
     this.enableButtons = this.enableButtons.bind(this);
+    this.changeDimension = this.changeDimension.bind(this);
   }
   //!   I don't trust this function but is seems to work for now
   changeTurn() {
@@ -122,6 +125,11 @@ export default class GameController extends Component {
   isGameOver(player) {
     return player.playerBoard.isFleetSunk();
   }
+  changeDimension(){
+    this.setState((state)=>{
+    return  {dimension: state.dimension === "horizontal"? "vertical":"horizontal"}
+    })
+  }
   componentDidUpdate() {
     console.log("did update");
     if (this.state.gameOver) {
@@ -146,7 +154,8 @@ export default class GameController extends Component {
         )}
         <div className={styles["game-container"]}>
           <div className={styles.player}>
-            <PlayerStatus title="Human" isGameOver={this.state.gameOver} />
+            <PlayerStatus title="Human" isGameOver={this.state.gameOver}
+            player={this.state.human} dimension={this.state.dimension} changeDimension={this.changeDimension}/>
             <PlayerBoard
               player={this.state.human}
               randoPlacement={this.randomPlacement}
@@ -157,6 +166,7 @@ export default class GameController extends Component {
             <PlayerStatus
               title="Super-Computer"
               isGameOver={this.state.gameOver}
+              player={this.state.computer}
             />
             <PlayerBoard
               player={this.state.computer}
@@ -170,3 +180,6 @@ export default class GameController extends Component {
   }
 }
 // randomly place ships on players boards.
+
+// how Ill go about making a preview of the blocks that have to be placed 
+//  make an on hover event ,
