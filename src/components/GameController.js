@@ -16,6 +16,8 @@ export default class GameController extends Component {
       turn: "Human",
       // dimenstion state
       dimension: "horizontal",
+      // preview state
+      preview: { previewArray:[],isPreviewValid:null},
       //   Im thinking of setting a state to keep track on the game's progress.
     };
     this.randomPlacement = this.randomPlacement.bind(this);
@@ -26,6 +28,8 @@ export default class GameController extends Component {
     this.disableButtons = this.disableButtons.bind(this);
     this.enableButtons = this.enableButtons.bind(this);
     this.changeDimension = this.changeDimension.bind(this);
+    this.setPreview = this.setPreview.bind(this);
+    this.resetPreview = this.resetPreview.bind(this);
   }
   //!   I don't trust this function but is seems to work for now
   changeTurn() {
@@ -130,6 +134,52 @@ export default class GameController extends Component {
     return  {dimension: state.dimension === "horizontal"? "vertical":"horizontal"}
     })
   }
+    // this function will be modelled after placeShip()
+  setPreview(ship,coordinates){
+    // will take board index directly
+    let startIndex = coordinates.position;
+    let coordinatesArray=[];
+    // it shouldnt be valid if it exceeds cap and when coordinates are shared
+    let isValid = true
+    if(coordinates.dimension === "vertical"){
+      let cap = 99;
+      let indexEnd = startIndex + (ship.length - 1) * 10;
+      for(let i = startIndex; i < indexEnd; i += 10){
+        coordinatesArray.push(i);
+        if(i >= cap){
+          isValid = false;
+          break;
+        }
+      }
+    }else if (coordinates.dimension === "horizontal"){
+      let cap = (parseInt(startIndex / 10, 10) + 1) * 10;
+      cap -= 1;
+      let indexEnd = startIndex + ship.length -1;
+      for(let i = startIndex; i < indexEnd; i++){
+        coordinatesArray.push(i);
+        if(i >= cap){
+          isValid = false;
+          break;
+        }
+      }
+    }
+    // isShared
+   const fleet = this.state.human.playerBoard.fleet;
+   for (const i of coordinatesArray) {
+     for (const ship of fleet) {
+     if(ship.coordinates.includes(i)){
+       isValid = false;
+     }
+   }
+   }
+   this.setState({preview: {previewArray:coordinatesArray, isPreviewValid: isValid }} ) 
+   console.log(this.state.preview);
+  }
+  resetPreview(){
+    this.setState({
+      preview: { previewArray:[],isPreviewValid:null}
+    })
+  }
   componentDidUpdate() {
     console.log("did update");
     if (this.state.gameOver) {
@@ -160,6 +210,10 @@ export default class GameController extends Component {
               player={this.state.human}
               randoPlacement={this.randomPlacement}
               clickHandler={this.clickHandler}
+              dimension={this.state.dimension}
+              setPreview={this.setPreview}
+              previewState={this.state.preview}
+              resetPreview={this.resetPreview}
             />
           </div>
           <div className={styles.player}>

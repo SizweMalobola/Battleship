@@ -14,6 +14,7 @@ export default class PlayerBoard extends Component {
     this.renderMisses = this.renderMisses.bind(this);
     this.renderHits = this.renderHits.bind(this);
     this.renderSunkShips = this.renderSunkShips.bind(this);
+    this.showPreview = this.showPreview.bind(this);
   }
   renderMisses() {
     this.props.player.playerBoard.misses.forEach((i) => {
@@ -39,7 +40,18 @@ export default class PlayerBoard extends Component {
       }
     });
   }
-
+  // apparently I cant get access the other parts of th preview object
+  showPreview(){
+let block = this.boardRef.current.children
+block = Array.from(block);
+block.forEach((child,index) => {
+  if(this.props.previewState.previewArray.includes(index)){
+    child.firstElementChild.classList.toggle(styles.preview,true);
+  }else{
+    child.firstElementChild.classList.toggle(styles.preview,false);
+  }
+})
+}
   componentDidMount() {
     this.props.randoPlacement(this.props.player);
   }
@@ -60,15 +72,24 @@ export default class PlayerBoard extends Component {
     this.renderHits();
     // render sunk ships
     this.renderSunkShips();
+    // render preview
+    if(this.props.player.playerName === "Human"){
+      this.showPreview(this.props.previewState);
+    }
+    // console.log(this.props.previewState)
   }
 
   render() {
-    const { player, clickHandler } = this.props;
+    const { player, clickHandler,dimension,setPreview,resetPreview} = this.props;
     return (
       <div
         ref={this.boardRef}
         id={player.playerName + "-board"}
         className={classNames(styles["game-board"], "board")}
+        // set preview state to default on mouse out
+        onMouseOut= {()=> {
+          resetPreview()
+        }}
       >
         {player.playerBoard.board.map((el, index) => {
           return (
@@ -84,10 +105,12 @@ export default class PlayerBoard extends Component {
                 onMouseOver={
                   (e) => {
                     if(player.playerName === "Human"){
-                      
+                      // I want to display how a ship will fit when they are
+                      setPreview(player.playerBoard.fleet[0],{position:index,dimension:dimension})
                     }
                   }
                 }
+                // 
               >
                 {player.playerBoard.misses.includes(index) && 
                  (<GiWaterSplash />) || player.playerBoard.sunkShips.find( ar => { return ar.includes(index) }) &&

@@ -52,7 +52,9 @@
 .sunk:hover {
   cursor: default !important;
 }
-
+.preview {
+  background-color: rgb(113, 113, 151);
+}
 @media only screen and (max-width: 600px) {
    .game-board{
    height: 400px;
