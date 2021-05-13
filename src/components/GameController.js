@@ -18,6 +18,8 @@ export default class GameController extends Component {
       dimension: "horizontal",
       // preview state
       preview: { previewArray:[],isPreviewValid:null},
+      // sorte
+      shipsPositioned: 0,
       //   Im thinking of setting a state to keep track on the game's progress.
     };
     this.randomPlacement = this.randomPlacement.bind(this);
@@ -30,6 +32,7 @@ export default class GameController extends Component {
     this.changeDimension = this.changeDimension.bind(this);
     this.setPreview = this.setPreview.bind(this);
     this.resetPreview = this.resetPreview.bind(this);
+    this.playerPlacement = this.playerPlacement.bind(this);
   }
   //!   I don't trust this function but is seems to work for now
   changeTurn() {
@@ -37,6 +40,21 @@ export default class GameController extends Component {
       turn: this.state.turn === "Human" ? "Computer" : "Human",
     });
     console.log(this.state.turn);
+  }
+  //! ship Placement for player
+  playerPlacement(){
+    const previewState = this.state.preview;
+    if(previewState.isPreviewValid && this.state.shipsPositioned !== 5){
+
+      let ship = shipsArray[this.state.shipsPositioned]; 
+      ship.coordinates = previewState.previewArray;
+      let humanStateClone =  JSON.parse(JSON.stringify(this.state.human));
+      humanStateClone.playerBoard.fleet.push(ship);    
+      this.setState({ human: humanStateClone})
+      this.setState((state) =>{
+        return {shipsPositioned: state.shipsPositioned + 1}
+      })
+    }
   }
   randomPlacement(player) {
     const board = player.playerBoard.board;
@@ -62,6 +80,10 @@ export default class GameController extends Component {
   }
   //   anything that has to do with updating state will be done here
   clickHandler(target, index, player) {
+    // run only if all ships are positioned
+    if(this.state.shipsPositioned !== 5){
+      return;
+    }
     // onclikck board being clicked receives attack
     if (
       player.playerBoard.misses.includes(index) ||
@@ -87,7 +109,7 @@ export default class GameController extends Component {
       // run function that will let computer take a turn
       this.changeTurn();
       setTimeout(()=>{
-        this.compsTurn(this.state.human)
+        this.compsTurn()
         this.enableButtons(btnArray);
       }, 1000); 
     }
@@ -103,25 +125,28 @@ export default class GameController extends Component {
        btn.removeAttribute("disabled");
      }
   }
-  compsTurn(player) {
+  compsTurn() {
     if (this.state.turn === "Computer") {
       console.log("is computer's turn");
     }
     let target = Math.round(Math.random() * 99);
     while (
-      player.playerBoard.misses.includes(target) ||
-      player.playerBoard.hits.includes(target)
+      this.state.human.playerBoard.misses.includes(target) ||
+      this.state.human.playerBoard.hits.includes(target)
     ) {
       target = Math.round(Math.random() * 99);
     }
-    let coordinates = player.playerBoard.board[target];
+    let coordinates = this.state.human.playerBoard.board[target];
+    // ! SUPER FIX THIS
+     let humanStateClone =  JSON.parse(JSON.stringify(this.state.human));
+      humanStateClone.playerBoard.receiveAttack(coordinates);
     this.setState({
-      player: player.playerBoard.receiveAttack(coordinates),
+      human: humanStateClone,
     });
+  
     //
-    if (this.isGameOver(player)) {
+    if (this.isGameOver(this.state.human)) {
       this.setState({ gameOver: true });
-      console.log("game over Super computer wins guy wins");
     } else {
       this.changeTurn();
     }
@@ -135,7 +160,12 @@ export default class GameController extends Component {
     })
   }
     // this function will be modelled after placeShip()
-  setPreview(ship,coordinates){
+  setPreview(coordinates){
+    // stop review if all ships have been positioned
+    if(this.state.shipsPositioned === 5){
+      return
+    }
+    let ship = shipsArray[this.state.shipsPositioned]
     // will take board index directly
     let startIndex = coordinates.position;
     let coordinatesArray=[];
@@ -144,22 +174,27 @@ export default class GameController extends Component {
     if(coordinates.dimension === "vertical"){
       let cap = 99;
       let indexEnd = startIndex + (ship.length - 1) * 10;
-      for(let i = startIndex; i < indexEnd; i += 10){
+      for(let i = startIndex; i <= indexEnd; i += 10){
         coordinatesArray.push(i);
-        if(i >= cap){
+       if(i > cap){
           isValid = false;
-          break;
+        }
+        if( i >= cap){
+          break
         }
       }
     }else if (coordinates.dimension === "horizontal"){
       let cap = (parseInt(startIndex / 10, 10) + 1) * 10;
       cap -= 1;
+      console.log(cap);
       let indexEnd = startIndex + ship.length -1;
-      for(let i = startIndex; i < indexEnd; i++){
+      for(let i = startIndex; i <= indexEnd; i++){
         coordinatesArray.push(i);
-        if(i >= cap){
+        if(i > cap){
           isValid = false;
-          break;
+        }
+        if( i >= cap){
+          break
         }
       }
     }
@@ -173,7 +208,6 @@ export default class GameController extends Component {
    }
    }
    this.setState({preview: {previewArray:coordinatesArray, isPreviewValid: isValid }} ) 
-   console.log(this.state.preview);
   }
   resetPreview(){
     this.setState({
@@ -205,15 +239,20 @@ export default class GameController extends Component {
         <div className={styles["game-container"]}>
           <div className={styles.player}>
             <PlayerStatus title="Human" isGameOver={this.state.gameOver}
-            player={this.state.human} dimension={this.state.dimension} changeDimension={this.changeDimension}/>
+            player={this.state.human} dimension={this.state.dimension} 
+            changeDimension={this.changeDimension}
+            shipsPositioned={this.state.shipsPositioned}
+            turn={this.state.turn}
+            />
             <PlayerBoard
               player={this.state.human}
-              randoPlacement={this.randomPlacement}
+              // randoPlacement={this.randomPlacement}
               clickHandler={this.clickHandler}
               dimension={this.state.dimension}
               setPreview={this.setPreview}
               previewState={this.state.preview}
               resetPreview={this.resetPreview}
+              playerPlacement={this.playerPlacement}
             />
           </div>
           <div className={styles.player}>
@@ -221,6 +260,8 @@ export default class GameController extends Component {
               title="Super-Computer"
               isGameOver={this.state.gameOver}
               player={this.state.computer}
+              shipsPositioned={this.state.shipsPositioned}
+
             />
             <PlayerBoard
               player={this.state.computer}

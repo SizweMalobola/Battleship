@@ -53,7 +53,9 @@ block.forEach((child,index) => {
 })
 }
   componentDidMount() {
+   if(this.props.player.playerName === "Computer"){
     this.props.randoPlacement(this.props.player);
+   }
   }
   componentDidUpdate() {
     //   renders blocks with ships
@@ -76,11 +78,11 @@ block.forEach((child,index) => {
     if(this.props.player.playerName === "Human"){
       this.showPreview(this.props.previewState);
     }
-    // console.log(this.props.previewState)
+    console.log(this.props.previewState)
   }
 
   render() {
-    const { player, clickHandler,dimension,setPreview,resetPreview} = this.props;
+    const { player, clickHandler,dimension,setPreview,resetPreview,playerPlacement} = this.props;
     return (
       <div
         ref={this.boardRef}
@@ -88,7 +90,9 @@ block.forEach((child,index) => {
         className={classNames(styles["game-board"], "board")}
         // set preview state to default on mouse out
         onMouseOut= {()=> {
-          resetPreview()
+          if(player.playerName === "Human"){
+            resetPreview();
+          }
         }}
       >
         {player.playerBoard.board.map((el, index) => {
@@ -100,13 +104,18 @@ block.forEach((child,index) => {
                   if (player.playerName === "Computer") {
                     clickHandler(e.target, index, player);
                   }
+                  if(player.playerName === "Human"){
+                    // place ships in fleet
+                    playerPlacement()
+                  }
                 }}
                 // 
                 onMouseOver={
                   (e) => {
                     if(player.playerName === "Human"){
                       // I want to display how a ship will fit when they are
-                      setPreview(player.playerBoard.fleet[0],{position:index,dimension:dimension})
+                      setPreview({position:index,dimension:dimension})
+                 
                     }
                   }
                 }
