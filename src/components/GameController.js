@@ -8,7 +8,6 @@ import { GameBoard, Player, shipsArray } from "../logic";
 export default class GameController extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       human: new Player("Human", new GameBoard()),
       computer: new Player("Computer", new GameBoard()),
@@ -79,7 +78,9 @@ export default class GameController extends Component {
     }
   }
   //   anything that has to do with updating state will be done here
-  clickHandler(target, index, player) {
+  clickHandler(target, index, player,man) {
+    console.log(man.playerBoard.receiveAttack);
+    // TODO make sure this only runs when player is human
     // run only if all ships are positioned
     if(this.state.shipsPositioned !== 5){
       return;
@@ -109,12 +110,38 @@ export default class GameController extends Component {
       // run function that will let computer take a turn
       this.changeTurn();
       setTimeout(()=>{
-        this.compsTurn()
+        this.compsTurn(man)
         this.enableButtons(btnArray);
       }, 1000); 
     }
   }
-  // function for disabling buttons
+
+  //TODO make this run independently  
+  compsTurn(player) {
+    console.log(player.playerBoard.receiveAttack);
+    let target = Math.round(Math.random() * 99);
+    while (
+      player.playerBoard.misses.includes(target) ||
+      player.playerBoard.hits.includes(target)
+    ) {
+      target = Math.round(Math.random() * 99);
+    }
+    let coordinates = player.playerBoard.board[target];
+    // ! SUPER FIX THIS
+    //  let humanStateClone =  JSON.parse(JSON.stringify(player));
+    //   humanStateClone.playerBoard.receiveAttack(coordinates);
+    this.setState({
+       player: player.playerBoard.receiveAttack(coordinates),
+    });
+    //
+    if (this.isGameOver(player)) {
+      this.setState({ gameOver: true });
+    } else {
+      this.changeTurn();
+    }
+    
+  }
+    // function for disabling buttons
   disableButtons(btnList){
     for (const btn of btnList) {
        btn.setAttribute("disabled",true);
@@ -124,32 +151,6 @@ export default class GameController extends Component {
      for (const btn of btnList) {
        btn.removeAttribute("disabled");
      }
-  }
-  compsTurn() {
-    if (this.state.turn === "Computer") {
-      console.log("is computer's turn");
-    }
-    let target = Math.round(Math.random() * 99);
-    while (
-      this.state.human.playerBoard.misses.includes(target) ||
-      this.state.human.playerBoard.hits.includes(target)
-    ) {
-      target = Math.round(Math.random() * 99);
-    }
-    let coordinates = this.state.human.playerBoard.board[target];
-    // ! SUPER FIX THIS
-     let humanStateClone =  JSON.parse(JSON.stringify(this.state.human));
-      humanStateClone.playerBoard.receiveAttack(coordinates);
-    this.setState({
-      human: humanStateClone,
-    });
-  
-    //
-    if (this.isGameOver(this.state.human)) {
-      this.setState({ gameOver: true });
-    } else {
-      this.changeTurn();
-    }
   }
   isGameOver(player) {
     return player.playerBoard.isFleetSunk();
@@ -246,6 +247,7 @@ export default class GameController extends Component {
             />
             <PlayerBoard
               player={this.state.human}
+              comp={this.state.computer}
               // randoPlacement={this.randomPlacement}
               clickHandler={this.clickHandler}
               dimension={this.state.dimension}
@@ -253,6 +255,7 @@ export default class GameController extends Component {
               previewState={this.state.preview}
               resetPreview={this.resetPreview}
               playerPlacement={this.playerPlacement}
+              compsTurn={this.compsTurn}
             />
           </div>
           <div className={styles.player}>
@@ -265,6 +268,7 @@ export default class GameController extends Component {
             />
             <PlayerBoard
               player={this.state.computer}
+              man={this.state.human}
               randoPlacement={this.randomPlacement}
               clickHandler={this.clickHandler}
             />

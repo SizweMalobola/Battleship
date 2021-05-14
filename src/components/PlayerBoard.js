@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { GiExplosionRays, GiShipWreck, GiWaterSplash } from "react-icons/gi";
 import styles from "../playerBoard.module.css";
-import {shipsArray } from "../logic";
 const classNames = require("classnames");
 
 
@@ -78,11 +77,10 @@ block.forEach((child,index) => {
     if(this.props.player.playerName === "Human"){
       this.showPreview(this.props.previewState);
     }
-    console.log(this.props.previewState)
   }
 
   render() {
-    const { player, clickHandler,dimension,setPreview,resetPreview,playerPlacement} = this.props;
+    const { player,man, clickHandler,dimension,setPreview,resetPreview,playerPlacement} = this.props;
     return (
       <div
         ref={this.boardRef}
@@ -102,7 +100,7 @@ block.forEach((child,index) => {
                 className={styles.btn}
                 onClick={(e) => {
                   if (player.playerName === "Computer") {
-                    clickHandler(e.target, index, player);
+                    clickHandler(e.target, index, player,man);
                   }
                   if(player.playerName === "Human"){
                     // place ships in fleet
