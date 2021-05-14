@@ -21,7 +21,6 @@ export default class PlayerBoard extends Component {
       block = block.children[i].firstElementChild;
       block.classList.add(styles.miss);
     });
-    console.log(this.props.player.playerBoard.misses);
   }
   renderHits() {
     this.props.player.playerBoard.hits.forEach((i) => {
@@ -52,15 +51,15 @@ block.forEach((child,index) => {
 })
 }
   componentDidMount() {
-   if(this.props.player.playerName === "Computer"){
-    this.props.randoPlacement(this.props.player);
-   }
+    if(this.props.player.playerName === "Computer"){
+      this.props.randoPlacement();
+    }
   }
   componentDidUpdate() {
     //   renders blocks with ships
     if (this.props.player.playerName === "Human") {
-      for (const ship of this.props.player.playerBoard.fleet) {
-        ship.coordinates.forEach((i) => {
+         for (const ship of this.props.player.playerBoard.fleet) {
+          ship.coordinates.forEach((i) => {
           let block = this.boardRef.current;
           block = block.children[i].firstElementChild;
           block.classList.add(styles.ship);
@@ -77,58 +76,25 @@ block.forEach((child,index) => {
     if(this.props.player.playerName === "Human"){
       this.showPreview(this.props.previewState);
     }
+    console.log(this.props.player.playerBoard.fleet);
   }
 
   render() {
-    const { player,man, clickHandler,dimension,setPreview,resetPreview,playerPlacement} = this.props;
-    return (
-      <div
-        ref={this.boardRef}
-        id={player.playerName + "-board"}
-        className={classNames(styles["game-board"], "board")}
-        // set preview state to default on mouse out
-        onMouseOut= {()=> {
-          if(player.playerName === "Human"){
-            resetPreview();
-          }
-        }}
-      >
-        {player.playerBoard.board.map((el, index) => {
-          return (
-            <div id={el} className={styles.block} key={el + index}>
-              <button
-                className={styles.btn}
-                onClick={(e) => {
-                  if (player.playerName === "Computer") {
-                    clickHandler(e.target, index, player,man);
-                  }
-                  if(player.playerName === "Human"){
-                    // place ships in fleet
-                    playerPlacement()
-                  }
-                }}
-                // 
-                onMouseOver={
-                  (e) => {
-                    if(player.playerName === "Human"){
-                      // I want to display how a ship will fit when they are
-                      setPreview({position:index,dimension:dimension})
-                 
-                    }
-                  }
-                }
-                // 
-              >
-                {player.playerBoard.misses.includes(index) && 
-                 (<GiWaterSplash />) || player.playerBoard.sunkShips.find( ar => { return ar.includes(index) }) &&
-                    (<GiShipWreck/>) || player.playerBoard.hits.includes(index) &&
-                    (<GiExplosionRays/>)
-                }
-              </button>
-            </div>
-          );
-        })}
-      </div>
-    );
+    const { player,clickHandler,dimension,setPreview,resetPreview,playerPlacement} = this.props;
+    return (player.playerName === "Human"?
+    <div ref={this.boardRef} id={player.playerName + "-board"} className={classNames(styles["game-board"], "board")} onMouseOut={()=> {resetPreview();}} >
+      {player.playerBoard.board.map((b,index)=>{return(<div id={b} className={styles.block} key={b+index}>
+        <button className={styles.btn} onClick={()=>{playerPlacement()}} onMouseOver={()=>{setPreview({position:index,dimension:dimension})}}>
+           {player.playerBoard.misses.includes(index) && (<GiWaterSplash />) || player.playerBoard.sunkShips.find( ar => { return ar.includes(index) }) && (<GiShipWreck/>) || player.playerBoard.hits.includes(index) && (<GiExplosionRays/>)}
+        </button>
+      </div>)})}
+    </div>
+    :<div ref={this.boardRef} id={player.playerName + "-board"} className={classNames(styles["game-board"], "board")} >
+      {player.playerBoard.board.map((b,index)=>{return(<div id={b} className={styles.block} key={b+index}>
+        <button className={styles.btn} onClick={(e)=>{clickHandler(e.target,index)}}>
+           {player.playerBoard.misses.includes(index) && (<GiWaterSplash />) || player.playerBoard.sunkShips.find( ar => { return ar.includes(index) }) && (<GiShipWreck/>) || player.playerBoard.hits.includes(index) && (<GiExplosionRays/>)}
+        </button>
+      </div>)})}
+    </div>)
   }
 }

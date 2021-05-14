@@ -3,7 +3,7 @@ import PlayerStatus from "./PlayerStatus";
 import { VscDebugRestart } from "react-icons/vsc";
 import styles from "../gameControllerStyles.module.css";
 import PlayerBoard from "./PlayerBoard";
-import { GameBoard, Player, shipsArray } from "../logic";
+import { GameBoard, Player, shipsArray,shipsArrayTwo } from "../logic";
 
 export default class GameController extends Component {
   constructor(props) {
@@ -33,53 +33,54 @@ export default class GameController extends Component {
     this.resetPreview = this.resetPreview.bind(this);
     this.playerPlacement = this.playerPlacement.bind(this);
   }
+  //TODO Add restart game functionality 
+  playAgain(){
+    this.setState({})
+  }
   //!   I don't trust this function but is seems to work for now
   changeTurn() {
     this.setState({
       turn: this.state.turn === "Human" ? "Computer" : "Human",
     });
-    console.log(this.state.turn);
   }
   //! ship Placement for player
   playerPlacement(){
     const previewState = this.state.preview;
     if(previewState.isPreviewValid && this.state.shipsPositioned !== 5){
-
-      let ship = shipsArray[this.state.shipsPositioned]; 
+      //! let obj = shipsArray[this.state.shipsPositioned]
+      //! let ship = Object.assign({},obj);
+      let ship = shipsArrayTwo[this.state.shipsPositioned];
       ship.coordinates = previewState.previewArray;
-      let humanStateClone =  JSON.parse(JSON.stringify(this.state.human));
+      let humanStateClone = Object.assign({}, this.state.human);
       humanStateClone.playerBoard.fleet.push(ship);    
-      this.setState({ human: humanStateClone})
+      this.setState({human:humanStateClone})
       this.setState((state) =>{
         return {shipsPositioned: state.shipsPositioned + 1}
       })
     }
+    console.log(this.state.human);
   }
-  randomPlacement(player) {
-    const board = player.playerBoard.board;
+  randomPlacement() {
+    const computerStateClone = Object.assign({},this.state.computer);
+    const board = computerStateClone.playerBoard.board;
     let shipsPlaced = 0;
     let shipIndex = 0;
     while (shipsPlaced !== 5) {
       let randoPosition = board[Math.round(Math.random() * 99)];
       let randoDimension = Math.round(Math.random() * 1);
       randoDimension = randoDimension ? "horizontal" : "vertical";
-
-      this.setState({
-        player: player.playerBoard.placeShip(shipsArray[shipIndex], {
-          position: randoPosition,
-          dimension: randoDimension,
-        }),
-      });
-
-      if (player.playerBoard.fleet.length > shipIndex) {
+      computerStateClone.playerBoard.placeShip(shipsArray[shipIndex],{position: randoPosition, dimension: randoDimension,})
+      this.setState({computer: computerStateClone});
+      if (this.state.computer.playerBoard.fleet.length > shipIndex) {
         shipIndex += 1;
         shipsPlaced += 1;
       }
     }
   }
   //   anything that has to do with updating state will be done here
-  clickHandler(target, index, player,man) {
-    console.log(man.playerBoard.receiveAttack);
+  clickHandler(target, index) {
+    console.log(this.state);
+    const player = this.state.computer;
     // TODO make sure this only runs when player is human
     // run only if all ships are positioned
     if(this.state.shipsPositioned !== 5){
@@ -108,9 +109,10 @@ export default class GameController extends Component {
      let btnArray = boardContainer.querySelectorAll("button");
       this.disableButtons(btnArray);
       // run function that will let computer take a turn
+   
       this.changeTurn();
       setTimeout(()=>{
-        this.compsTurn(man)
+        this.compsTurn(this.state.human)
         this.enableButtons(btnArray);
       }, 1000); 
     }
@@ -118,7 +120,6 @@ export default class GameController extends Component {
 
   //TODO make this run independently  
   compsTurn(player) {
-    console.log(player.playerBoard.receiveAttack);
     let target = Math.round(Math.random() * 99);
     while (
       player.playerBoard.misses.includes(target) ||
@@ -175,11 +176,11 @@ export default class GameController extends Component {
     if(coordinates.dimension === "vertical"){
       let cap = 99;
       let indexEnd = startIndex + (ship.length - 1) * 10;
-      for(let i = startIndex; i <= indexEnd; i += 10){
-        coordinatesArray.push(i);
-       if(i > cap){
+        if(indexEnd > cap){
           isValid = false;
         }
+      for(let i = startIndex; i <= indexEnd; i += 10){
+        coordinatesArray.push(i);
         if( i >= cap){
           break
         }
@@ -187,15 +188,14 @@ export default class GameController extends Component {
     }else if (coordinates.dimension === "horizontal"){
       let cap = (parseInt(startIndex / 10, 10) + 1) * 10;
       cap -= 1;
-      console.log(cap);
       let indexEnd = startIndex + ship.length -1;
+      if(indexEnd > cap){
+        isValid = false;
+      }
       for(let i = startIndex; i <= indexEnd; i++){
         coordinatesArray.push(i);
-        if(i > cap){
-          isValid = false;
-        }
-        if( i >= cap){
-          break
+        if(i >= cap){
+          break;
         }
       }
     }
@@ -247,8 +247,6 @@ export default class GameController extends Component {
             />
             <PlayerBoard
               player={this.state.human}
-              comp={this.state.computer}
-              // randoPlacement={this.randomPlacement}
               clickHandler={this.clickHandler}
               dimension={this.state.dimension}
               setPreview={this.setPreview}
@@ -266,9 +264,8 @@ export default class GameController extends Component {
               shipsPositioned={this.state.shipsPositioned}
 
             />
-            <PlayerBoard
+              <PlayerBoard
               player={this.state.computer}
-              man={this.state.human}
               randoPlacement={this.randomPlacement}
               clickHandler={this.clickHandler}
             />

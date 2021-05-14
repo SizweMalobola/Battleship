@@ -45,6 +45,12 @@ let submarine = new Ship(3);
 let destroyerOne = new Ship(2);
 let destroyerTwo = new Ship(2);
 const shipsArray = [carrier, battleship, submarine, destroyerOne, destroyerTwo];
+let ship1 = new Ship(5);
+let ship2 = new Ship(4);
+let ship3 = new Ship(3);
+let ship4 = new Ship(2);
+let ship5 = new Ship(2);
+const shipsArrayTwo = [ship1,ship2,ship3,ship4,ship5];
 //  A Good Idea would be to keep my battleships in an array. And not create them on the spot.
 class GameBoard {
   constructor() {
@@ -254,4 +260,4 @@ class Player {
 // player one will click on random block on grid which will represent
 // whether its a hit or a miss , the next turn goes to the computer
 // once a ship been sunk, it will be displayed
-export { GameBoard, Player, shipsArray };
+export { GameBoard, Player, shipsArray,shipsArrayTwo };
