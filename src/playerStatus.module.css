@@ -4,18 +4,51 @@
 }
 
 .panel {
-  width: 75%;
-  margin: 0 auto;
   text-align: center;
   border: white 2px dotted;
-  padding: 1rem;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  margin: 2rem auto;
+  height: 8rem;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-
+.panel div{
+  display: flex;
+  justify-content: center;
+  font-size: 1.5rem;
+}
 .prompt {
-  color: #4ed9db;
-  margin-bottom: 1rem;
+  color: #004ae9;
+  margin-bottom: 10px;
+}
+.btn{
+  font-size: 1rem;
+  margin-right: 5px;
+  padding: 5px;
+  background-color: gray;
+}
+.btn:hover{
+  cursor: pointer;
+  background-color: rgb(78, 78, 78);
+}
+.pill{
+  background-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+}
+.turn-pill{
+  background-color: rgb(233, 223, 223);
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  margin-right: 5px;
 }
 
 @media only screen and (max-width: 600px) {
