@@ -1,0 +1,7 @@
+//!   I don't trust this function but is seems to work for now
+
+//! let obj = shipsArray[this.state.shipsPositioned]
+
+//! let ship = Object.assign({},obj);
+
+//! ship Placement for player
