@@ -3,7 +3,7 @@ import PlayerStatus from "./PlayerStatus";
 import { VscDebugRestart } from "react-icons/vsc";
 import styles from "../gameControllerStyles.module.css";
 import PlayerBoard from "./PlayerBoard";
-import { GameBoard, Player, shipsArray,shipsArrayTwo } from "../logic";
+import { GameBoard, Player,Ship } from "../logic";
 
 export default class GameController extends Component {
   constructor(props) {
@@ -32,6 +32,27 @@ export default class GameController extends Component {
     this.setPreview = this.setPreview.bind(this);
     this.resetPreview = this.resetPreview.bind(this);
     this.playerPlacement = this.playerPlacement.bind(this);
+    this.createShip = this.createShip.bind(this);
+  }
+  // 
+  createShip(num){
+    let ship;
+    switch (num) {
+      case 0:
+        ship = new Ship(5);
+        break;
+      case 1:
+        ship = new Ship(4);
+        break;
+      case 2:
+        ship = new Ship(3);
+        break;
+
+      default:
+        ship = new Ship(2);
+        break;
+    }
+    return ship;
   }
   //TODO Add restart game functionality 
   playAgain(){
@@ -49,7 +70,7 @@ export default class GameController extends Component {
     if(previewState.isPreviewValid && this.state.shipsPositioned !== 5){
       //! let obj = shipsArray[this.state.shipsPositioned]
       //! let ship = Object.assign({},obj);
-      let ship = shipsArrayTwo[this.state.shipsPositioned];
+      let ship = this.createShip([this.state.shipsPositioned]);
       ship.coordinates = previewState.previewArray;
       let humanStateClone = Object.assign({}, this.state.human);
       humanStateClone.playerBoard.fleet.push(ship);    
@@ -69,7 +90,8 @@ export default class GameController extends Component {
       let randoPosition = board[Math.round(Math.random() * 99)];
       let randoDimension = Math.round(Math.random() * 1);
       randoDimension = randoDimension ? "horizontal" : "vertical";
-      computerStateClone.playerBoard.placeShip(shipsArray[shipIndex],{position: randoPosition, dimension: randoDimension,})
+      let ship = this.createShip(shipIndex)
+      computerStateClone.playerBoard.placeShip(ship,{position: randoPosition, dimension: randoDimension,})
       this.setState({computer: computerStateClone});
       if (this.state.computer.playerBoard.fleet.length > shipIndex) {
         shipIndex += 1;
@@ -167,7 +189,7 @@ export default class GameController extends Component {
     if(this.state.shipsPositioned === 5){
       return
     }
-    let ship = shipsArray[this.state.shipsPositioned]
+    let ship = this.createShip(this.state.shipsPositioned)
     // will take board index directly
     let startIndex = coordinates.position;
     let coordinatesArray=[];

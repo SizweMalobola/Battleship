@@ -46,7 +46,7 @@ block.forEach((child,index) => {
   if(this.props.previewState.previewArray.includes(index)){
     child.firstElementChild.classList.toggle(styles.preview,true);
   }else{
-    child.firstElementChild.classList.toggle(styles.preview,false);
+   child.firstElementChild.classList.toggle(styles.preview,false);
   }
 })
 }
