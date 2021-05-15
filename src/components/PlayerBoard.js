@@ -76,7 +76,6 @@ block.forEach((child,index) => {
     if(this.props.player.playerName === "Human"){
       this.showPreview(this.props.previewState);
     }
-    console.log(this.props.player.playerBoard.fleet);
   }
 
   render() {

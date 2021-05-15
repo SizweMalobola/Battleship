@@ -60,16 +60,16 @@ export default class GameController extends Component {
   }
   //!   I don't trust this function but is seems to work for now
   changeTurn() {
-    this.setState({
-      turn: this.state.turn === "Human" ? "Computer" : "Human",
+    let currentTurn = this.state.turn === "Human"?"Computer":"Human"; 
+    this.setState((state) =>{
+     return{ turn: state.turn = currentTurn}
     });
+    console.log(this.state.turn);
   }
   //! ship Placement for player
   playerPlacement(){
     const previewState = this.state.preview;
     if(previewState.isPreviewValid && this.state.shipsPositioned !== 5){
-      //! let obj = shipsArray[this.state.shipsPositioned]
-      //! let ship = Object.assign({},obj);
       let ship = this.createShip([this.state.shipsPositioned]);
       ship.coordinates = previewState.previewArray;
       let humanStateClone = Object.assign({}, this.state.human);
@@ -79,7 +79,6 @@ export default class GameController extends Component {
         return {shipsPositioned: state.shipsPositioned + 1}
       })
     }
-    console.log(this.state.human);
   }
   randomPlacement() {
     const computerStateClone = Object.assign({},this.state.computer);
@@ -101,7 +100,6 @@ export default class GameController extends Component {
   }
   //   anything that has to do with updating state will be done here
   clickHandler(target, index) {
-    console.log(this.state);
     const player = this.state.computer;
     // TODO make sure this only runs when player is human
     // run only if all ships are positioned
@@ -150,9 +148,6 @@ export default class GameController extends Component {
       target = Math.round(Math.random() * 99);
     }
     let coordinates = player.playerBoard.board[target];
-    // ! SUPER FIX THIS
-    //  let humanStateClone =  JSON.parse(JSON.stringify(player));
-    //   humanStateClone.playerBoard.receiveAttack(coordinates);
     this.setState({
        player: player.playerBoard.receiveAttack(coordinates),
     });
@@ -297,7 +292,3 @@ export default class GameController extends Component {
     );
   }
 }
-// randomly place ships on players boards.
-
-// how Ill go about making a preview of the blocks that have to be placed 
-//  make an on hover event ,

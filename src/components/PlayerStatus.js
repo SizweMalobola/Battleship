@@ -19,7 +19,7 @@ export default class PlayerStatus extends Component {
             {shipsPositioned !==5?<div><button className={styles.btn} onClick={()=>{changeDimension()}}>Dimension : {dimension} </button><p className={styles.pill} >ships left to place: {5 - shipsPositioned}</p></div>:<div><p className={styles["turn-pill"]}>{turn === "Human"? "your turn": "waiting.."}</p><p className={styles.pill} >Ships Remaining: {5 - player.playerBoard.sunkShips.length}</p></div>}</div>
           :<div className={styles.panel}>
             {shipsPositioned !== 5? <p className={styles.prompt} >waiting...</p>:<p className={styles.prompt} >click on this board to sink their ships</p>}
-            {shipsPositioned !== 5?<div>waiting for you to position your ships</div>:<div><p className={styles["turn-pill"]} >{turn === "Human"? "your turn": "waiting.."}</p><p className={styles.pill}>Ships Remaining: {5 - player.playerBoard.sunkShips.length}</p></div>}
+            {shipsPositioned !== 5?<div>waiting for you to position your ships</div>:<div><p className={styles["turn-pill"]} >{turn === "Computer"? "your turn": "waiting.."}</p><p className={styles.pill}>Ships Remaining: {5 - player.playerBoard.sunkShips.length}</p></div>}
           </div>
         )}
       </div>
