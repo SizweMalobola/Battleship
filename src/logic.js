@@ -39,7 +39,6 @@ export default class Ship {
     return this.shipStructure.every((val) => val === "hit");
   }
 }
-//  A Good Idea would be to keep my battleships in an array. And not create them on the spot.
 class GameBoard {
   constructor() {
     this.board = [
@@ -150,8 +149,7 @@ class GameBoard {
     this.sunkShips = [];
   }
   placeShip(ship, coordinates) {
-    // I add ship to battleshipesArray after it is successfully placed, else throw error.
-    // check whether position has already been taken
+    // ship object is pushed to fleet array with coordiantes array representing where the ship is placed on the board
     let start = this.board.indexOf(coordinates.position);
     let coordinatesArray = [];
     let current = start;
@@ -171,8 +169,6 @@ class GameBoard {
       // check wether given coordinates will wrap to the row below
       let cap = (parseInt(current / 10, 10) + 1) * 10;
       cap -= 1;
-      // because indexes
-      // console.log(cap);
       if (current + ship.length - 1 > cap) {
         return "pick different coordinates";
       }
@@ -182,7 +178,7 @@ class GameBoard {
       }
     }
     // set the coordinates on the ship object and push ship object to fleet
-    // before I add the coordinates to my ship object I first have to check in the fleet if any of the coordinates I'm trying to add to ship have already been used
+    // before I add the coordinates to my ship object I first have to check in the fleet if any of the coordinates I'm trying to add to ship have already been taken by another ship
     if (this.isShared(coordinatesArray)) {
       return "you have shared coordinates";
     } else {
@@ -190,9 +186,9 @@ class GameBoard {
       this.fleet.push(ship);
     }
   }
-  isShared(array) {
+  isShared(coordiantesArray) {
     let shared = false;
-    array.forEach((i) => {
+    coordiantesArray.forEach((i) => {
       for (const obj of this.fleet) {
         if (obj.coordinates.includes(i)) {
           shared = true;
@@ -228,24 +224,11 @@ class GameBoard {
     });
   }
 }
-// coordinates is an object. the object will have two variables position(A1) and dimension(can only be horizontal or vertical).
-// when before coordinates can be saved to ship object, I have to make sure that they are valid.
-// coordinates would follow a simple set of rules
-// 1. ship coordinates must not warp to row below. 2. two ships can not share the same block on the grid.
-
-// create Player
-// It only makes sense if Player is its own Class
 class Player {
   constructor(player, board) {
     this.playerName = player;
     this.playerBoard = board;
   }
-  // player is ready function, checks whether player's fleet is 5;
 }
-// whats next for me is to implement game loop
-// player one will set up ships on his board
-// computer will set up ships on its board
-// player one will click on random block on grid which will represent
-// whether its a hit or a miss , the next turn goes to the computer
-// once a ship been sunk, it will be displayed
-export { GameBoard, Player,Ship };
+
+export { GameBoard, Player, Ship };

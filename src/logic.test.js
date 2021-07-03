@@ -124,8 +124,6 @@ test("gameboard should keep track of missed attacks", () => {
   let carrier = new Ship(5);
   let battleship = new Ship(4);
   let submarine = new Ship(3);
-  // let destroyer = new Ship(2);
-  // let destroyerTwo = new Ship(2);
   let board = new GameBoard();
   board.placeShip(battleship, { position: "1A", dimension: "horizontal" });
   board.placeShip(carrier, { position: "5E", dimension: "horizontal" });
@@ -156,11 +154,8 @@ test("should return true if all ships in fleet are sunk", () => {
   let submarine = new Ship(3);
   let board = new GameBoard();
   board.placeShip(submarine, { position: "1A", dimension: "horizontal" });
-  // board.placeShip(submarine, { position: "2A", dimension: "horizontal" });
   board.receiveAttack("1A");
   board.receiveAttack("1B");
   board.receiveAttack("1C");
   expect(board.isFleetSunk()).toBe(true);
 });
-
-// Player
