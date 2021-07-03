@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# Battleship
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a recreation of the classic Battleship board game.
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+Run `yarn install` to install all of the dependencies.
 
-### `yarn start`
+To start developing locally,
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```
+yarn start
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+to run the development server.
 
-### `yarn test`
+Run `yarn build` to create a production ready build.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Rules
 
-### `yarn build`
+Users will place 5 different ships when the game starts. These include:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Carrier: length 5
+- Battleship: length 4
+- Cruiser: length 3
+- Destoryer X 2: length 2
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Afterwards, the player and the ai will take turns attacking each other's boards.
+Players will be informed that a ship is hit or sunken. The first player to sink all ships wins.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Built With
 
-### `yarn eject`
+- HTML
+- CSS3
+- JavaScript/ES6
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Frameworks
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- ReactJS
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Libraries
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- Jest
+- React Router DOM
+- React Icons
 
-## Learn More
+## Future Improvements
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- AI can be better improved using a probability density function
+- A state management library like Redux can be implemented to lessen the amount of state variables being passed as props
+- Ability to play against another player locally or on the web
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Live Demo
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[Live Demo Link](https://sizwemalobola.github.io/Battleship/)
