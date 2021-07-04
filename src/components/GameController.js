@@ -3,7 +3,7 @@ import PlayerStatus from "./PlayerStatus";
 import { VscDebugRestart } from "react-icons/vsc";
 import styles from "../gameControllerStyles.module.css";
 import PlayerBoard from "./PlayerBoard";
-import { GameBoard, Player,Ship } from "../logic";
+import { GameBoard, Player, Ship } from "../logic";
 
 export default class GameController extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ export default class GameController extends Component {
       // dimenstion state
       dimension: "horizontal",
       // preview state
-      preview: { previewArray:[],isPreviewValid:null},
+      preview: { previewArray: [], isPreviewValid: null },
       // sorte
       shipsPositioned: 0,
       //   Im thinking of setting a state to keep track on the game's progress.
@@ -34,8 +34,8 @@ export default class GameController extends Component {
     this.playerPlacement = this.playerPlacement.bind(this);
     this.createShip = this.createShip.bind(this);
   }
-  // 
-  createShip(num){
+  //
+  createShip(num) {
     let ship;
     switch (num) {
       case 0:
@@ -54,34 +54,33 @@ export default class GameController extends Component {
     }
     return ship;
   }
-  //TODO Add restart game functionality 
-  playAgain(){
-    this.setState({})
+  //TODO Add restart game functionality
+  playAgain() {
+    this.setState({});
   }
   //!   I don't trust this function but is seems to work for now
   changeTurn() {
-    let currentTurn = this.state.turn === "Human"?"Computer":"Human"; 
-    this.setState((state) =>{
-     return{ turn: state.turn = currentTurn}
+    let currentTurn = this.state.turn === "Human" ? "Computer" : "Human";
+    this.setState((state) => {
+      return { turn: (state.turn = currentTurn) };
     });
-    console.log(this.state.turn);
   }
   //! ship Placement for player
-  playerPlacement(){
+  playerPlacement() {
     const previewState = this.state.preview;
-    if(previewState.isPreviewValid && this.state.shipsPositioned !== 5){
+    if (previewState.isPreviewValid && this.state.shipsPositioned !== 5) {
       let ship = this.createShip([this.state.shipsPositioned]);
       ship.coordinates = previewState.previewArray;
       let humanStateClone = Object.assign({}, this.state.human);
-      humanStateClone.playerBoard.fleet.push(ship);    
-      this.setState({human:humanStateClone})
-      this.setState((state) =>{
-        return {shipsPositioned: state.shipsPositioned + 1}
-      })
+      humanStateClone.playerBoard.fleet.push(ship);
+      this.setState({ human: humanStateClone });
+      this.setState((state) => {
+        return { shipsPositioned: state.shipsPositioned + 1 };
+      });
     }
   }
   randomPlacement() {
-    const computerStateClone = Object.assign({},this.state.computer);
+    const computerStateClone = Object.assign({}, this.state.computer);
     const board = computerStateClone.playerBoard.board;
     let shipsPlaced = 0;
     let shipIndex = 0;
@@ -89,9 +88,12 @@ export default class GameController extends Component {
       let randoPosition = board[Math.round(Math.random() * 99)];
       let randoDimension = Math.round(Math.random() * 1);
       randoDimension = randoDimension ? "horizontal" : "vertical";
-      let ship = this.createShip(shipIndex)
-      computerStateClone.playerBoard.placeShip(ship,{position: randoPosition, dimension: randoDimension,})
-      this.setState({computer: computerStateClone});
+      let ship = this.createShip(shipIndex);
+      computerStateClone.playerBoard.placeShip(ship, {
+        position: randoPosition,
+        dimension: randoDimension,
+      });
+      this.setState({ computer: computerStateClone });
       if (this.state.computer.playerBoard.fleet.length > shipIndex) {
         shipIndex += 1;
         shipsPlaced += 1;
@@ -103,7 +105,7 @@ export default class GameController extends Component {
     const player = this.state.computer;
     // TODO make sure this only runs when player is human
     // run only if all ships are positioned
-    if(this.state.shipsPositioned !== 5){
+    if (this.state.shipsPositioned !== 5) {
       return;
     }
     // onclikck board being clicked receives attack
@@ -125,20 +127,20 @@ export default class GameController extends Component {
       console.log("game over Human guy wins");
     } else {
       // disable computers buttons to prevent click while waiting for computer to make a move
-     let boardContainer = target.parentElement.parentElement;
-     let btnArray = boardContainer.querySelectorAll("button");
+      let boardContainer = target.parentElement.parentElement;
+      let btnArray = boardContainer.querySelectorAll("button");
       this.disableButtons(btnArray);
       // run function that will let computer take a turn
-   
+
       this.changeTurn();
-      setTimeout(()=>{
-        this.compsTurn(this.state.human)
+      setTimeout(() => {
+        this.compsTurn(this.state.human);
         this.enableButtons(btnArray);
-      }, 1000); 
+      }, 1000);
     }
   }
 
-  //TODO make this run independently  
+  //TODO make this run independently
   compsTurn(player) {
     let target = Math.round(Math.random() * 99);
     while (
@@ -149,7 +151,7 @@ export default class GameController extends Component {
     }
     let coordinates = player.playerBoard.board[target];
     this.setState({
-       player: player.playerBoard.receiveAttack(coordinates),
+      player: player.playerBoard.receiveAttack(coordinates),
     });
     //
     if (this.isGameOver(player)) {
@@ -157,80 +159,83 @@ export default class GameController extends Component {
     } else {
       this.changeTurn();
     }
-    
   }
-    // function for disabling buttons
-  disableButtons(btnList){
+  // function for disabling buttons
+  disableButtons(btnList) {
     for (const btn of btnList) {
-       btn.setAttribute("disabled",true);
-     }
+      btn.setAttribute("disabled", true);
+    }
   }
-  enableButtons(btnList){
-     for (const btn of btnList) {
-       btn.removeAttribute("disabled");
-     }
+  enableButtons(btnList) {
+    for (const btn of btnList) {
+      btn.removeAttribute("disabled");
+    }
   }
   isGameOver(player) {
     return player.playerBoard.isFleetSunk();
   }
-  changeDimension(){
-    this.setState((state)=>{
-    return  {dimension: state.dimension === "horizontal"? "vertical":"horizontal"}
-    })
+  changeDimension() {
+    this.setState((state) => {
+      return {
+        dimension: state.dimension === "horizontal" ? "vertical" : "horizontal",
+      };
+    });
   }
-    // this function will be modelled after placeShip()
-  setPreview(coordinates){
+  // this function will be modelled after placeShip()
+  setPreview(coordinates) {
     // stop review if all ships have been positioned
-    if(this.state.shipsPositioned === 5){
-      return
+    if (this.state.shipsPositioned === 5) {
+      return;
     }
-    let ship = this.createShip(this.state.shipsPositioned)
+    let ship = this.createShip(this.state.shipsPositioned);
     // will take board index directly
     let startIndex = coordinates.position;
-    let coordinatesArray=[];
+    let coordinatesArray = [];
     // it shouldnt be valid if it exceeds cap and when coordinates are shared
-    let isValid = true
-    if(coordinates.dimension === "vertical"){
+    let isValid = true;
+    if (coordinates.dimension === "vertical") {
       let cap = 99;
       let indexEnd = startIndex + (ship.length - 1) * 10;
-        if(indexEnd > cap){
-          isValid = false;
-        }
-      for(let i = startIndex; i <= indexEnd; i += 10){
-        coordinatesArray.push(i);
-        if( i >= cap){
-          break
-        }
-      }
-    }else if (coordinates.dimension === "horizontal"){
-      let cap = (parseInt(startIndex / 10, 10) + 1) * 10;
-      cap -= 1;
-      let indexEnd = startIndex + ship.length -1;
-      if(indexEnd > cap){
+      if (indexEnd > cap) {
         isValid = false;
       }
-      for(let i = startIndex; i <= indexEnd; i++){
+      for (let i = startIndex; i <= indexEnd; i += 10) {
         coordinatesArray.push(i);
-        if(i >= cap){
+        if (i >= cap) {
+          break;
+        }
+      }
+    } else if (coordinates.dimension === "horizontal") {
+      let cap = (parseInt(startIndex / 10, 10) + 1) * 10;
+      cap -= 1;
+      let indexEnd = startIndex + ship.length - 1;
+      if (indexEnd > cap) {
+        isValid = false;
+      }
+      for (let i = startIndex; i <= indexEnd; i++) {
+        coordinatesArray.push(i);
+        if (i >= cap) {
           break;
         }
       }
     }
     // isShared
-   const fleet = this.state.human.playerBoard.fleet;
-   for (const i of coordinatesArray) {
-     for (const ship of fleet) {
-     if(ship.coordinates.includes(i)){
-       isValid = false;
-     }
-   }
-   }
-   this.setState({preview: {previewArray:coordinatesArray, isPreviewValid: isValid }} ) 
-  }
-  resetPreview(){
+    const fleet = this.state.human.playerBoard.fleet;
+    for (const i of coordinatesArray) {
+      for (const ship of fleet) {
+        if (ship.coordinates.includes(i)) {
+          isValid = false;
+        }
+      }
+    }
     this.setState({
-      preview: { previewArray:[],isPreviewValid:null}
-    })
+      preview: { previewArray: coordinatesArray, isPreviewValid: isValid },
+    });
+  }
+  resetPreview() {
+    this.setState({
+      preview: { previewArray: [], isPreviewValid: null },
+    });
   }
   componentDidUpdate() {
     console.log("did update");
@@ -239,6 +244,7 @@ export default class GameController extends Component {
       const buttonsArray = document.querySelectorAll(".board button");
       this.disableButtons(buttonsArray);
     }
+    console.log(this.state.turn);
   }
   componentDidMount() {}
 
@@ -256,11 +262,14 @@ export default class GameController extends Component {
         )}
         <div className={styles["game-container"]}>
           <div className={styles.player}>
-            <PlayerStatus title="Human" isGameOver={this.state.gameOver}
-            player={this.state.human} dimension={this.state.dimension} 
-            changeDimension={this.changeDimension}
-            shipsPositioned={this.state.shipsPositioned}
-            turn={this.state.turn}
+            <PlayerStatus
+              title="Human"
+              isGameOver={this.state.gameOver}
+              player={this.state.human}
+              dimension={this.state.dimension}
+              changeDimension={this.changeDimension}
+              shipsPositioned={this.state.shipsPositioned}
+              turn={this.state.turn}
             />
             <PlayerBoard
               player={this.state.human}
@@ -279,9 +288,8 @@ export default class GameController extends Component {
               isGameOver={this.state.gameOver}
               player={this.state.computer}
               shipsPositioned={this.state.shipsPositioned}
-
             />
-              <PlayerBoard
+            <PlayerBoard
               player={this.state.computer}
               randoPlacement={this.randomPlacement}
               clickHandler={this.clickHandler}
