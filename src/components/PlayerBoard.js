@@ -56,7 +56,7 @@ export default class PlayerBoard extends Component {
   }
   componentDidUpdate() {
     //   displays placed ships
-    if (this.props.player.playerName) {
+    if (this.props.player.playerName === "Human") {
       for (const ship of this.props.player.playerBoard.fleet) {
         ship.coordinates.forEach((i) => {
           const boardDivContainer = this.boardRef.current;
