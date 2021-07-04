@@ -54,9 +54,19 @@ export default class GameController extends Component {
     }
     return ship;
   }
-  //TODO Add restart game functionality
+  //Todo Add restart game functionality
   playAgain() {
-    this.setState({});
+    this.setState({
+      human: new Player("Human", new GameBoard()),
+      computer: new Player("Computer", new GameBoard()),
+      gameOver: false,
+      turn: "Human",
+      dimension: "horizontal",
+      preview: { previewArray: [], isPreviewValid: null },
+      shipsPositioned: 0,
+    });
+    //Todo Find a way to clear both playerBoards
+    this.randomPlacement();
   }
   changeTurn() {
     this.setState((state) => {
@@ -242,7 +252,12 @@ export default class GameController extends Component {
         {this.state.gameOver && (
           <div className={styles.winnerPanel}>
             <h1>Winner is {this.state.turn}</h1>
-            <button className={styles.restart}>
+            <button
+              onClick={() => {
+                this.playAgain();
+              }}
+              className={styles.restart}
+            >
               <VscDebugRestart />
               Restart
             </button>
