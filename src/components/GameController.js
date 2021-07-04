@@ -59,9 +59,8 @@ export default class GameController extends Component {
     this.setState({});
   }
   changeTurn() {
-    let currentTurn = this.state.turn === "Human" ? "Computer" : "Human";
     this.setState((state) => {
-      return { turn: (state.turn = currentTurn) };
+      return { turn: state.turn === "Human" ? "Computer" : "Human" };
     });
   }
   //! this method does the same things as Gameboard.placeShips() instance method
