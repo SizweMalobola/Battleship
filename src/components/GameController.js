@@ -34,7 +34,7 @@ export default class GameController extends Component {
     this.playerPlacement = this.playerPlacement.bind(this);
     this.createShip = this.createShip.bind(this);
   }
-  //
+  // methods
   createShip(num) {
     let ship;
     switch (num) {
@@ -229,15 +229,12 @@ export default class GameController extends Component {
     });
   }
   componentDidUpdate() {
-    console.log("did update");
+    // If game is over all buttons will become disabled
     if (this.state.gameOver) {
-      //  I want blocks not to respond, maybe I should add another class claaed
       const buttonsArray = document.querySelectorAll(".board button");
       this.disableButtons(buttonsArray);
     }
-    console.log(this.state.turn);
   }
-  componentDidMount() {}
 
   render() {
     return (

@@ -16,34 +16,34 @@ export default class PlayerBoard extends Component {
   }
   renderMisses() {
     this.props.player.playerBoard.misses.forEach((i) => {
-      let block = this.boardRef.current;
-      block = block.children[i].firstElementChild;
+      const boardDivContainer = this.boardRef.current;
+      const block = boardDivContainer.children[i].firstElementChild;
       block.classList.add(styles.miss);
     });
   }
   renderHits() {
     this.props.player.playerBoard.hits.forEach((i) => {
-      let block = this.boardRef.current;
-      block = block.children[i].firstElementChild;
+      const boardDivContainer = this.boardRef.current;
+      const block = boardDivContainer.children[i].firstElementChild;
       block.classList.add(styles.hit);
     });
   }
   renderSunkShips() {
     this.props.player.playerBoard.sunkShips.forEach((arr) => {
       for (const i of arr) {
-        let block = this.boardRef.current;
-        block = block.children[i].firstElementChild;
+        const boardDivContainer = this.boardRef.current;
+        const block = boardDivContainer.children[i].firstElementChild;
         block.classList.add(styles.sunk);
       }
     });
   }
-  // apparently I cant get access the other parts of th preview object
   showPreview() {
-    let block = this.boardRef.current.children;
-    block = Array.from(block);
-    block.forEach((child, index) => {
+    const boardDivChildren = this.boardRef.current.children;
+    const boardChildrenArray = Array.from(boardDivChildren);
+    boardChildrenArray.forEach((child, index) => {
       if (this.props.previewState.previewArray.includes(index)) {
         child.firstElementChild.classList.toggle(styles.preview, true);
+        // Todo show invalid previews in a different color
       } else {
         child.firstElementChild.classList.toggle(styles.preview, false);
       }
@@ -55,8 +55,8 @@ export default class PlayerBoard extends Component {
     }
   }
   componentDidUpdate() {
-    //   displayes placedships by setting
-    if (this.props.player.playerName === "Human") {
+    //   displays placed ships
+    if (this.props.player.playerName) {
       for (const ship of this.props.player.playerBoard.fleet) {
         ship.coordinates.forEach((i) => {
           const boardDivContainer = this.boardRef.current;
