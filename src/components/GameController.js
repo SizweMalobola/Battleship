@@ -65,11 +65,11 @@ export default class GameController extends Component {
       return { turn: (state.turn = currentTurn) };
     });
   }
-  //! ship Placement for player
+  //! this method does the same things as Gameboard.placeShips() instance method
   playerPlacement() {
     const previewState = this.state.preview;
     if (previewState.isPreviewValid && this.state.shipsPositioned !== 5) {
-      let ship = this.createShip([this.state.shipsPositioned]);
+      let ship = this.createShip(this.state.shipsPositioned);
       ship.coordinates = previewState.previewArray;
       let humanStateClone = Object.assign({}, this.state.human);
       humanStateClone.playerBoard.fleet.push(ship);
@@ -83,22 +83,20 @@ export default class GameController extends Component {
     const computerStateClone = Object.assign({}, this.state.computer);
     const board = computerStateClone.playerBoard.board;
     let shipsPlaced = 0;
-    let shipIndex = 0;
     while (shipsPlaced !== 5) {
       let randoPosition = board[Math.round(Math.random() * 99)];
       let randoDimension = Math.round(Math.random() * 1);
       randoDimension = randoDimension ? "horizontal" : "vertical";
-      let ship = this.createShip(shipIndex);
+      let ship = this.createShip(shipsPlaced);
       computerStateClone.playerBoard.placeShip(ship, {
         position: randoPosition,
         dimension: randoDimension,
       });
-      this.setState({ computer: computerStateClone });
-      if (this.state.computer.playerBoard.fleet.length > shipIndex) {
-        shipIndex += 1;
+      if (computerStateClone.playerBoard.fleet.length > shipsPlaced) {
         shipsPlaced += 1;
       }
     }
+    this.setState({ computer: computerStateClone });
   }
   //   anything that has to do with updating state will be done here
   clickHandler(target, index) {
