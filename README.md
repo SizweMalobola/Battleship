@@ -41,7 +41,6 @@ Players will be informed that a ship is hit or sunken. The first player to sink 
 ### Libraries
 
 - Jest
-- React Router DOM
 - React Icons
 
 ## Future Improvements
