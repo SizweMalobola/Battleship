@@ -1,0 +1,1 @@
+//! this method does the same things as Gameboard.placeShips() instance method
