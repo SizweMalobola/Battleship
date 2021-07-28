@@ -40,7 +40,7 @@ Players will be informed that a ship is hit or sunken. The first player to sink 
 
 ### Libraries
 
-- J
+- Jest
 - React Icons
 
 ## Future Improvements
