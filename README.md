@@ -2,20 +2,6 @@
 
 This is a recreation of the classic Battleship board game.
 
-## Getting Started
-
-Run `yarn install` to install all of the dependencies.
-
-To start developing locally,
-
-```
-yarn start
-```
-
-to run the development server.
-
-Run `yarn build` to create a production ready build.
-
 ## Rules
 
 Users will place 5 different ships when the game starts. These include:
